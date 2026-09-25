@@ -9,16 +9,10 @@ jobs:
         with:
           repository: appium/WebDriverAgent
           path: WebDriverAgent
-      - name: Build
-        run: |
-          cd WebDriverAgent
-          xcodebuild build-for-testing -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath ./build CODE_SIGNING_ALLOWED=NO
-      - name: Package
-        run: |
-          cd WebDriverAgent/build/Build/Products/Debug-iphoneos
-          mkdir Payload
-          cp -r WebDriverAgentRunner-Runner.app Payload/
-          zip -r WDA.ipa Payload
+      - name: Build WDA
+        run: cd WebDriverAgent && xcodebuild build-for-testing -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath ./build CODE_SIGNING_ALLOWED=NO
+      - name: Package IPA
+        run: cd WebDriverAgent/build/Build/Products/Debug-iphoneos && mkdir Payload && cp -r WebDriverAgentRunner-Runner.app Payload/ && zip -r WDA.ipa Payload
       - uses: actions/upload-artifact@v4
         with:
           name: WDA
